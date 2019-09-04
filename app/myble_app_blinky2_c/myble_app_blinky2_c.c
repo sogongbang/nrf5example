@@ -441,8 +441,18 @@ static void gatt_init(void)
  */
 static void idle_state_handle(void)
 {
-    NRF_LOG_FLUSH();
-    nrf_pwr_mgmt_run();
+    if (NRF_LOG_PROCESS() == false)
+    {
+#if 0
+        nrf_pwr_mgmt_run();
+#else
+        // Wait for an event.
+        __WFE();
+        // Clear the internal event register.
+        __SEV();
+        __WFE();
+#endif
+    }
 }
 
 
@@ -474,7 +484,7 @@ int appmain(int argc, char *argv[]) {
 
     srand(time(NULL));
 
-	r = task_create(NULL, taskfunc, NULL, task_getmiddlepriority(), 0, "task1");
+	r = task_create(NULL, taskfunc, NULL, task_getmiddlepriority(), 0, "task0");
 	if (0 != r) {
 		logme("fail at task_create\r\n");
 	}
@@ -488,7 +498,7 @@ static void taskfunc(void *arg) {
 	int r;
 
     // Start execution.
-    NRF_LOG_INFO("MyBlinky CENTRAL example started.");
+    NRF_LOG_INFO("MyBlinky2 CENTRAL example started.");
     scan_start();
 
 #if !defined(ENABLE_TRACE)

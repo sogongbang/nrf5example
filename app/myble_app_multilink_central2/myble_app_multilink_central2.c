@@ -478,7 +478,15 @@ static void idle_state_handle(void)
 {
     if (NRF_LOG_PROCESS() == false)
     {
+#if 0
         nrf_pwr_mgmt_run();
+#else
+        // Wait for an event.
+        __WFE();
+        // Clear the internal event register.
+        __SEV();
+        __WFE();
+#endif
     }
 }
 
@@ -541,7 +549,7 @@ int appmain(int argc, char *argv[]) {
 
     srand(time(NULL));
 
-	r = task_create(NULL, taskfunc, NULL, task_getmiddlepriority(), 0, "task1");
+	r = task_create(NULL, taskfunc, NULL, task_getmiddlepriority(), 0, "task0");
 	if (0 != r) {
 		logme("fail at task_create\r\n");
 	}
@@ -555,7 +563,7 @@ static void taskfunc(void *arg) {
 	int r;
 
     // Start execution.
-    NRF_LOG_INFO("MyMultilink example started.");
+    NRF_LOG_INFO("MyMultilink2 example started.");
     scan_start();
 
 
