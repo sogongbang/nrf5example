@@ -1,5 +1,4 @@
 set_cache(NRF5SDK__BOARD_NAME "PCA10040" STRING)
-set_cache(NRF5SDK__BOARD_CONFIG_NAME "CLI" STRING)
 set_cache(NRF5SDK__APP_TIMER_V2 TRUE BOOL)
 set_cache(NRF5SDK__APP_TIMER_V2_RTC1_ENABLED TRUE BOOL)
 set_cache(NRF5SDK__DEBUG TRUE BOOL)
@@ -24,3 +23,9 @@ file(GLOB_RECURSE _tmp_sources
 
 set(PROJECT_APP_SOURCES ${PROJECT_APP_SOURCES} ${_tmp_sources})
 
+string(TOLOWER ${NRF5SDK__BOARD_NAME} _temp_board_name)
+
+get_filename_component(_tmp_source_dir "${PROJECT_LIBRARY_DIR}/nrf5sdk/source/nRF5_SDK/examples/peripheral/cli/" ABSOLUTE)
+
+include_directories(${_tmp_source_dir}/${_temp_board_name}/blank/config)
+include_directories(${_tmp_source_dir})
