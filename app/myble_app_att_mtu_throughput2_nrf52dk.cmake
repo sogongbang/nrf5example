@@ -30,3 +30,7 @@ get_filename_component(_tmp_source_dir "${PROJECT_LIBRARY_DIR}/nrf5sdk/source/nR
 include_directories(${_tmp_source_dir}/${_temp_board_name}/${_temp_softdevice_name}/config)
 include_directories(${_tmp_source_dir})
 
+set(PROJECT_APP_SOURCES ${PROJECT_APP_SOURCES} "${_tmp_source_dir}/amtc.c")
+set(PROJECT_APP_SOURCES ${PROJECT_APP_SOURCES} "${_tmp_source_dir}/amts.c")
+set(PROJECT_APP_SOURCES ${PROJECT_APP_SOURCES} "${_tmp_source_dir}/counter.c")
+set(PROJECT_APP_SOURCES ${PROJECT_APP_SOURCES} "${_tmp_source_dir}/example_cmds.c")
