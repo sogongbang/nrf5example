@@ -1,4 +1,3 @@
-set_cache(NRF5SDK__BOARD_NAME "PCA10040" STRING)
 set_cache(NRF5SDK__BSP_DEFINES_ONLY TRUE BOOL)
 
 include(${PROJECT_UBINOS_DIR}/config/ubinos_nrf52dk.cmake)
