@@ -8,9 +8,9 @@ include(${PROJECT_LIBRARY_DIR}/nrf5sdk/config/nrf5sdk.cmake)
 ####
 
 set(INCLUDE__APP TRUE)
-set(APP__NAME "myble_app_att_mtu_throughput2")
+set(APP__NAME "myble_app_att_mtu_throughput")
 
-get_filename_component(_tmp_source_dir "${CMAKE_CURRENT_LIST_DIR}/myble_app_att_mtu_throughput2" ABSOLUTE)
+get_filename_component(_tmp_source_dir "${CMAKE_CURRENT_LIST_DIR}/myble_app_att_mtu_throughput" ABSOLUTE)
 
 file(GLOB_RECURSE _tmp_sources
     "${_tmp_source_dir}/*.c"

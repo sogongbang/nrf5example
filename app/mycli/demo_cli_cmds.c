@@ -1,6 +1,6 @@
 #include <ubinos.h>
 
-#if (INCLUDE__APP__mycli2 == 1)
+#if (INCLUDE__APP__mycli == 1)
 
 #include <ctype.h>
 #include "nrf_cli.h"
@@ -451,5 +451,5 @@ NRF_CLI_CMD_REGISTER(dynamic,
                      "Demonstrate dynamic command usage.",
                      cmd_dynamic);
 
-#endif /* (INCLUDE__APP__mycli2 == 1) */
+#endif /* (INCLUDE__APP__mycli == 1) */
 

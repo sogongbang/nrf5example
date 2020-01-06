@@ -1,6 +1,6 @@
 #include <ubinos.h>
 
-#if (INCLUDE__APP__myble_app_multilink_central2 == 1)
+#if (INCLUDE__APP__myble_app_multilink_central == 1)
 
 #include <time.h>
 
@@ -610,5 +610,5 @@ static void task2func(void *arg) {
 }
 
 
-#endif /* (INCLUDE__APP__myble_app_multilink_central2 == 1) */
+#endif /* (INCLUDE__APP__myble_app_multilink_central == 1) */
 

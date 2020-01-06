@@ -1,6 +1,6 @@
 #include <ubinos.h>
 
-#if (INCLUDE__APP__myrtc2 == 1)
+#if (INCLUDE__APP__myrtc == 1)
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,7 +15,7 @@
 #include <boards.h>
 #include <app_error.h>
 
-static void myrtc2_isr(void);
+static void myrtc_isr(void);
 static void helloworld_mt_task1func(void *arg);
 static void helloworld_mt_task2func(void *arg);
 
@@ -26,7 +26,7 @@ int appmain(int argc, char *argv[]) {
 	//
 	printf("\n\n\r\n");
 	printf("================================================================================\r\n");
-	printf("myrtc2 (build time: %s %s)\r\n", __TIME__, __DATE__);
+	printf("myrtc (build time: %s %s)\r\n", __TIME__, __DATE__);
 	printf("================================================================================\r\n");
 	printf("\r\n");
 #if (UBINOS__UBICLIB__USE_MALLOC_RETARGETING == 1)
@@ -53,7 +53,7 @@ int appmain(int argc, char *argv[]) {
 	nrf_rtc_task_trigger(NRF_RTC1, NRF_RTC_TASK_CLEAR);
 	nrf_rtc_task_trigger(NRF_RTC1, NRF_RTC_TASK_START);
 
-	intr_connectisr(RTC1_IRQn, myrtc2_isr, intr_getlowestpriority(), 0);
+	intr_connectisr(RTC1_IRQn, myrtc_isr, intr_getlowestpriority(), 0);
 	intr_enable(RTC1_IRQn);
 
 	srand(time(NULL));
@@ -73,7 +73,7 @@ int appmain(int argc, char *argv[]) {
 	return 0;
 }
 
-static void myrtc2_isr(void) {
+static void myrtc_isr(void) {
 	nrf_gpio_pin_toggle(BSP_LED_0);
 	nrf_rtc_event_clear(NRF_RTC1, NRF_RTC_EVENT_TICK);
 }
@@ -102,5 +102,5 @@ static void helloworld_mt_task2func(void *arg) {
 	}
 }
 
-#endif /* (INCLUDE__APP__myrtc2 == 1) */
+#endif /* (INCLUDE__APP__myrtc == 1) */
 

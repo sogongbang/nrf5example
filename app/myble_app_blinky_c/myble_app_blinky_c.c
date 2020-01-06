@@ -1,6 +1,6 @@
 #include <ubinos.h>
 
-#if (INCLUDE__APP__myble_app_blinky2_c == 1)
+#if (INCLUDE__APP__myble_app_blinky_c == 1)
 
 #include <time.h>
 
@@ -498,7 +498,7 @@ static void taskfunc(void *arg) {
 	int r;
 
     // Start execution.
-    NRF_LOG_INFO("MyBlinky2 CENTRAL example started.");
+    NRF_LOG_INFO("MyBlinky CENTRAL example started.");
     scan_start();
 
 #if !defined(ENABLE_TRACE)
@@ -548,5 +548,5 @@ static void task2func(void *arg) {
 	}
 }
 
-#endif /* (INCLUDE__APP__myble_app_blinky2_c == 1) */
+#endif /* (INCLUDE__APP__myble_app_blinky_c == 1) */
 

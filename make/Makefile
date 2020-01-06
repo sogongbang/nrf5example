@@ -1,4 +1,4 @@
-CONFIG_NAME ?= myrtc2_nrf52dk
+CONFIG_NAME ?= mycli_nrf52dk
 
 include makefile.mk
 

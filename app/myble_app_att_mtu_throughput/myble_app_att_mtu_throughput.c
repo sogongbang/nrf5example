@@ -1,6 +1,6 @@
 #include <ubinos.h>
 
-#if (INCLUDE__APP__myble_app_att_mtu_throughput2 == 1)
+#if (INCLUDE__APP__myble_app_att_mtu_throughput == 1)
 
 #include <time.h>
 
@@ -1262,5 +1262,5 @@ static void task2func(void *arg) {
 	}
 }
 
-#endif /* (INCLUDE__APP__myble_app_att_mtu_throughput2 == 1) */
+#endif /* (INCLUDE__APP__myble_app_att_mtu_throughput == 1) */
 
