@@ -20,7 +20,6 @@
 #include "app_util.h"
 
 #include "nrf_cli.h"
-#include "nrf_cli_rtt.h"
 #include "nrf_cli_types.h"
 
 #include "boards.h"
@@ -36,6 +35,8 @@
 
 #if defined(APP_USBD_ENABLED) && APP_USBD_ENABLED
 #define CLI_OVER_USB_CDC_ACM 1
+#define CLI_OVER_DTTY 0
+#define CLI_OVER_UART 0
 #define CLI_OVER_RTT 0
 #else
 #define CLI_OVER_USB_CDC_ACM 0
@@ -51,23 +52,18 @@
 #endif //CLI_OVER_USB_CDC_ACM
 
 #if (CLI_OVER_USB_CDC_ACM == 0)
-#if (UBINOS__BSP__USE_DTTY == 1)
-#define CLI_OVER_UART 0
-#if defined(TX_PIN_NUMBER) && defined(RX_PIN_NUMBER)
-#define CLI_OVER_DTTY 1
-#define CLI_OVER_RTT 0
+#if (NRF_CLI_DTTY_ENABLED == 1)
+	#define CLI_OVER_DTTY 1
+	#define CLI_OVER_UART 0
+	#define CLI_OVER_RTT  0
+#elif (NRF_CLI_UART_ENABLED == 1)
+	#define CLI_OVER_DTTY 0
+	#define CLI_OVER_UART 1
+	#define CLI_OVER_RTT  0
 #else
-#define CLI_OVER_DTTY 0
-#define CLI_OVER_RTT 1
-#endif
-#else
-#if defined(TX_PIN_NUMBER) && defined(RX_PIN_NUMBER)
-#define CLI_OVER_UART 1
-#define CLI_OVER_RTT 0
-#else
-#define CLI_OVER_UART 0
-#define CLI_OVER_RTT 1
-#endif
+	#define CLI_OVER_DTTY 0
+	#define CLI_OVER_UART 0
+	#define CLI_OVER_RTT  1
 #endif
 #endif
 
@@ -77,6 +73,10 @@
 
 #if CLI_OVER_DTTY
 #include "nrf_cli_dtty.h"
+#endif
+
+#if CLI_OVER_RTT
+#include "nrf_cli_rtt.h"
 #endif
 
 static void task1func(void *arg);
@@ -177,12 +177,14 @@ NRF_CLI_DEF(m_cli_dtty,
             CLI_EXAMPLE_LOG_QUEUE_SIZE);
 #endif
 
+#if CLI_OVER_RTT
 NRF_CLI_RTT_DEF(m_cli_rtt_transport);
 NRF_CLI_DEF(m_cli_rtt,
             "rtt_mycli:~$ ",
             &m_cli_rtt_transport.transport,
             '\n',
             CLI_EXAMPLE_LOG_QUEUE_SIZE);
+#endif
 
 static void timer_handle(void * p_context)
 {

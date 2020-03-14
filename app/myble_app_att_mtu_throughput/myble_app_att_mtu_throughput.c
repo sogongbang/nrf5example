@@ -29,7 +29,6 @@
 #include "app_timer.h"
 #include "app_error.h"
 #include "nrf_cli.h"
-#include "nrf_cli_rtt.h"
 #include "nrf_pwr_mgmt.h"
 #include "nrf_ble_scan.h"
 
@@ -37,19 +36,18 @@
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
 
-#if (UBINOS__BSP__USE_DTTY == 1)
-#define CLI_OVER_UART 0
-#if defined(TX_PIN_NUMBER) && defined(RX_PIN_NUMBER)
-#define CLI_OVER_DTTY 1
+#if (NRF_CLI_DTTY_ENABLED == 1)
+	#define CLI_OVER_DTTY 1
+	#define CLI_OVER_UART 0
+	#define CLI_OVER_RTT  0
+#elif (NRF_CLI_UART_ENABLED == 1)
+	#define CLI_OVER_DTTY 0
+	#define CLI_OVER_UART 1
+	#define CLI_OVER_RTT  0
 #else
-#define CLI_OVER_DTTY 0
-#endif
-#else
-#if defined(TX_PIN_NUMBER) && defined(RX_PIN_NUMBER)
-#define CLI_OVER_UART 1
-#else
-#define CLI_OVER_UART 0
-#endif
+	#define CLI_OVER_DTTY 0
+	#define CLI_OVER_UART 0
+	#define CLI_OVER_RTT  1
 #endif
 
 #if CLI_OVER_UART
@@ -58,6 +56,10 @@
 
 #if CLI_OVER_DTTY
 #include "nrf_cli_dtty.h"
+#endif
+
+#if CLI_OVER_RTT
+#include "nrf_cli_rtt.h"
 #endif
 
 #define DATA_LENGTH_DEFAULT             27                                              /**< The stack default data length. */
@@ -139,8 +141,10 @@ NRF_CLI_DTTY_DEF(m_cli_dtty_transport);
 NRF_CLI_DEF(m_cli_dtty,  "throughput example:~$ ", &m_cli_dtty_transport.transport,  '\n', 4);
 #endif
 
+#if CLI_OVER_RTT
 NRF_CLI_RTT_DEF(m_cli_rtt_transport);
 NRF_CLI_DEF(m_cli_rtt,  "throughput example:~$ ", &m_cli_rtt_transport.transport,  '\n', 4);
+#endif
 
 
 static board_role_t volatile m_board_role  = NOT_SELECTED;
@@ -1121,11 +1125,13 @@ static void test_terminate(void)
 
 void cli_init(void)
 {
+#if CLI_OVER_RTT
     if (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk)
     {
         ret_code_t err_code = nrf_cli_init(&m_cli_rtt, NULL, true, true, NRF_LOG_SEVERITY_INFO);
         APP_ERROR_CHECK(err_code);
     }
+#endif
 
     ret_code_t err_code = NRF_SUCCESS;
     (void) err_code;
