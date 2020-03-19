@@ -32,5 +32,4 @@ include_directories(${_tmp_source_dir})
 
 set(PROJECT_APP_SOURCES ${PROJECT_APP_SOURCES} "${_tmp_source_dir}/amtc.c")
 set(PROJECT_APP_SOURCES ${PROJECT_APP_SOURCES} "${_tmp_source_dir}/amts.c")
-set(PROJECT_APP_SOURCES ${PROJECT_APP_SOURCES} "${_tmp_source_dir}/counter.c")
 set(PROJECT_APP_SOURCES ${PROJECT_APP_SOURCES} "${_tmp_source_dir}/example_cmds.c")

@@ -10,7 +10,6 @@
 #include <stdio.h>
 
 #include "amt.h"
-#include "counter.h"
 
 #include "sdk_config.h"
 #include "nrf.h"
@@ -86,6 +85,8 @@
 
 static uint8_t m_adv_handle = BLE_GAP_ADV_SET_HANDLE_NOT_SET;                           /**< Advertising handle used to identify an advertising set. */
 static uint8_t m_enc_advdata[BLE_GAP_ADV_SET_DATA_SIZE_MAX];                            /**< Buffer for storing an encoded advertising set. */
+
+static tickcount_t m_test_start_tick;
 
 /**@brief Struct that contains pointers to the encoded advertising data. */
 static ble_gap_adv_data_t m_adv_data =
@@ -437,12 +438,12 @@ static void amts_evt_handler(nrf_ble_amts_evt_t evt)
 
         case NRF_BLE_AMTS_EVT_TRANSFER_FINISHED:
         {
-            counter_stop();
-
             bsp_board_led_off(PROGRESS_LED);
             bsp_board_led_on(DONE_LED);
 
-            uint32_t time_ms      = counter_get();
+            tickcount_t test_end_tick = ubik_gettickcount();
+            tickcount_t test_diff_tick = ubik_gettickdiff(m_test_start_tick, test_end_tick);
+            uint32_t time_ms      = ubik_ticktotimems(test_diff_tick.low);
             uint32_t bit_count    = (evt.bytes_transfered_cnt * 8);
             float throughput_kbps = ((bit_count / (time_ms / 1000.f)) / 1000.f);
 
@@ -1026,7 +1027,7 @@ void test_begin(void)
 
 static void test_run(void)
 {
-    counter_start();
+	m_test_start_tick = ubik_gettickcount();
     nrf_ble_amts_notif_spam(&m_amts);
 }
 
@@ -1072,15 +1073,7 @@ static void idle_state_handle(void)
 
     if (NRF_LOG_PROCESS() == false)
     {
-#if 0
-        nrf_pwr_mgmt_run();
-#else
-        // Wait for an event.
-        __WFE();
-        // Clear the internal event register.
-        __SEV();
-        __WFE();
-#endif
+    	nrf_pwr_mgmt_run();
     }
 }
 
@@ -1186,7 +1179,6 @@ int appmain(int argc, char *argv[]) {
     cli_init();
     leds_init();
     timer_init();
-    counter_init();
     buttons_init();
     power_management_init();
     ble_stack_init();

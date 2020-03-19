@@ -478,15 +478,7 @@ static void idle_state_handle(void)
 {
     if (NRF_LOG_PROCESS() == false)
     {
-#if 0
         nrf_pwr_mgmt_run();
-#else
-        // Wait for an event.
-        __WFE();
-        // Clear the internal event register.
-        __SEV();
-        __WFE();
-#endif
     }
 }
 

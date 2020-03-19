@@ -360,9 +360,12 @@ int appmain(int argc, char *argv[]) {
         APP_ERROR_CHECK(NRF_LOG_INIT(app_timer_cnt_get));
     }
 
+#if (UBINOS__UBIK__TICK_TYPE == UBINOS__UBIK__TICK_TYPE__RTC)
+#else
     ret = nrf_drv_clock_init();
     APP_ERROR_CHECK(ret);
     nrf_drv_clock_lfclk_request(NULL);
+#endif /* (UBINOS__UBIK__TICK_TYPE == UBINOS__UBIK__TICK_TYPE__RTC) */
 
     ret = app_timer_init();
     APP_ERROR_CHECK(ret);

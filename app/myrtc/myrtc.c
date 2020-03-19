@@ -19,9 +19,15 @@ static void myrtc_isr(void);
 static void helloworld_mt_task1func(void *arg);
 static void helloworld_mt_task2func(void *arg);
 
+#define RTC NRF_RTC0
+#define RTC_IRQ_NO RTC0_IRQn
+
 int appmain(int argc, char *argv[]) {
 	int r;
+#if (UBINOS__UBIK__TICK_TYPE == UBINOS__UBIK__TICK_TYPE__RTC)
+#else
 	ret_code_t err_code;
+#endif
 
 	//
 	printf("\n\n\r\n");
@@ -42,19 +48,22 @@ int appmain(int argc, char *argv[]) {
 	bsp_board_init(BSP_INIT_LEDS);
 
 	//
+#if (UBINOS__UBIK__TICK_TYPE == UBINOS__UBIK__TICK_TYPE__RTC)
+#else
 	err_code = nrf_drv_clock_init();
 	APP_ERROR_CHECK(err_code);
 
 	nrf_drv_clock_lfclk_request(NULL);
+#endif
 
 	//
-	nrf_rtc_prescaler_set(NRF_RTC1, 4095);
-	nrf_rtc_int_enable(NRF_RTC1, RTC_INTENSET_TICK_Msk);
-	nrf_rtc_task_trigger(NRF_RTC1, NRF_RTC_TASK_CLEAR);
-	nrf_rtc_task_trigger(NRF_RTC1, NRF_RTC_TASK_START);
+	nrf_rtc_prescaler_set(RTC, 4095);
+	nrf_rtc_int_enable(RTC, RTC_INTENSET_TICK_Msk);
+	nrf_rtc_task_trigger(RTC, NRF_RTC_TASK_CLEAR);
+	nrf_rtc_task_trigger(RTC, NRF_RTC_TASK_START);
 
-	intr_connectisr(RTC1_IRQn, myrtc_isr, intr_getlowestpriority(), 0);
-	intr_enable(RTC1_IRQn);
+	intr_connectisr(RTC_IRQ_NO, myrtc_isr, intr_getlowestpriority(), 0);
+	intr_enable(RTC_IRQ_NO);
 
 	srand(time(NULL));
 
@@ -75,7 +84,7 @@ int appmain(int argc, char *argv[]) {
 
 static void myrtc_isr(void) {
 	nrf_gpio_pin_toggle(BSP_LED_0);
-	nrf_rtc_event_clear(NRF_RTC1, NRF_RTC_EVENT_TICK);
+	nrf_rtc_event_clear(RTC, NRF_RTC_EVENT_TICK);
 }
 
 static void helloworld_mt_task1func(void *arg) {
